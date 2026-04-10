@@ -1,7 +1,3 @@
-.section .rodata
-    format_int:         .string "%d\n"
-    format_sent:        .string "Got here!"
-
 .text
 .global make_node
 .global insert

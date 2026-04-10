@@ -1,6 +1,6 @@
 .section .rodata
     filename: .string "input.txt"   # The null-terminated file name
-    format_integer:     .string "%d\n"
+    format_integer:     .string "%ld\n"
     format_char:        .string "%c\n"
     format_string:      .string "%s\n"
     format_yes:         .string "Yes\n"
