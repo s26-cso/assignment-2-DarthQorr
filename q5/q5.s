@@ -61,40 +61,40 @@ sd t4, 16(sp)
 ld t0, 48(sp)
 
 li  a7, 62
-mv a0, t0
+mv a0, t0                           # Moves file offset to right pointer
 mv a1, t4
 li a2, 0
 ecall
 
 ld t0,48(sp)
 
-li a7, 63
+li a7, 63                           # Loads rightmost byte into buffer
 mv a0, t0
 lla a1, characters
 li a2, 1
 ecall
 
 lla t6, characters
-lb t5, 0(t6)
+lb t5, 0(t6)                        # Loads that read byte into t5
 ld t3,24(sp)
 ld t4,16(sp)
 
 li t6, 10
-beq t6,t5, newline
+beq t6,t5, newline                  # If byte is '\n' (10), jump to handle it
 
 j loop
 
 
 
-newline:
-addi t4,t4,-1
+newline:                            # This loop gets rid of all newlines to the right
+addi t4,t4,-1                       # Moves right pointer back 1 to skip newline
 sd t4, 16(sp)
 
 ld t0, 48(sp)
 
 li  a7, 62
 mv a0, t0
-mv a1, t4
+mv a1, t4                           # Moves offset to the new right pointer
 li a2, 0
 ecall
 
@@ -102,28 +102,27 @@ ld t0,48(sp)
 
 li a7, 63
 mv a0, t0
-lla a1, characters
+lla a1, characters                  # Grabs the new last character and puts it in buffer
 li a2, 1
 ecall
 
-lla t6, characters
+lla t6, characters                  
 lb t5, 0(t6)
 li t6, 10
 
-beq t6,t5, newline
+beq t6,t5, newline                  # If it's another newline, loop back and skip it again
 
 j loop
 
 
 loop:
-bge t3,t4, print_yes
-
+bge t3,t4, print_yes                # If left >= right without violating the equality constrant, the string is a palindrome!
 
 
 ld t3, 24(sp)
 ld t0, 48(sp)
 
-li  a7, 62
+li  a7, 62                          # Seek to the current left pointer
 mv a0, t0
 mv a1, t3
 li a2, 0
@@ -132,12 +131,12 @@ ecall
 ld t0,48(sp)
 
 li a7, 63
-mv a0, t0
+mv a0, t0                           # Reads the left character
 lla a1, characters
 li a2, 1
 ecall
 
-lla t6, characters
+lla t6, characters                  # Stores the left character in memory
 lb t1, 0(t6)
 sd t1, 32(sp)
 
@@ -148,7 +147,7 @@ ld t0, 48(sp)
 
 li  a7, 62
 mv a0, t0
-mv a1, t4
+mv a1, t4                           # Seek to the current right pointer
 li a2, 0
 ecall
 
@@ -156,34 +155,34 @@ ld t0,48(sp)
 
 li a7, 63
 mv a0, t0
-lla a1, characters
+lla a1, characters                  # Read the right character
 li a2, 1
 ecall
 
 lla t6, characters
-lb t2, 0(t6)
+lb t2, 0(t6)                        # Stores the right character in memory
 sd t2, 40(sp)
 
 
 
 ld t1, 32(sp)
-ld t3, 24(sp)
+ld t3, 24(sp)                       # Reloads registers
 ld t4, 16(sp)
 
-bne t1,t2,print_no
+bne t1,t2,print_no                  # Mismatch found, not a palindrome
 
-addi t3, t3, 1
-addi t4, t4, -1
+addi t3, t3, 1                      # Move left pointer forward
+addi t4, t4, -1                     # Move right pointer backward
 sd t3, 24(sp)
 sd t4, 16(sp)
 
-j loop
+j loop                              # Repeat for the next pair of characters
 
 
 
 
 print_yes:
-lla a0,format_yes
+lla a0,format_yes                   # Prints yes
 call printf
 
 j wrap_up
@@ -191,7 +190,7 @@ j wrap_up
 
 
 print_no:
-lla a0,format_no
+lla a0,format_no                    # Prints no
 call printf
 
 j wrap_up
