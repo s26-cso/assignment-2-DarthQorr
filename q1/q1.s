@@ -12,7 +12,7 @@ make_node:
 # t0 - Value (8)
 # t1 - Address of new node (0)
 
-addi sp,sp,-24
+addi sp,sp,-32
 mv t0, a0
 sd ra, 16(sp)               # Kicking off
 sd t0, 8(sp)
@@ -33,7 +33,7 @@ sd x0, 16(t1)
 
 ld ra, 16(sp)
 ld t1, 0(sp)                   # Wrap up
-addi sp,sp,24
+addi sp,sp,32
 mv a0, t1
 
 ret
