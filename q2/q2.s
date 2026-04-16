@@ -1,6 +1,6 @@
 .section .rodata
     format_int: .string "%ld "
-
+    format_nl:  .string "\n"
 .text
 .global main
 
@@ -30,6 +30,8 @@ sd t1, 104(sp)
 slli a0, t0, 3
 call malloc                                         # Allocate memory for the integer array
 sd a0, 96(sp)
+ld t0, 112(sp)
+
 
 mv t2, a0
 li t5, 0
@@ -195,6 +197,9 @@ j print
 
 
 wrap_up:
+lla a0, format_nl
+call printf
+
 ld ra, 120(sp)
 addi sp, sp, 128
 li a0, 0
