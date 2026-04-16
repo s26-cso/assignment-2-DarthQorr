@@ -1,5 +1,6 @@
 .section .rodata
     format_int: .string "%ld "
+    format_space: .string " "
     format_nl:  .string "\n"
 .text
 .global main
@@ -178,22 +179,30 @@ li t5, 0
 
 print:
 ld t0, 112(sp)
-beq t5, t0, wrap_up                             # Loop until all N results are printed
+beq t5, t0, wrap_up                             
 
 ld t2, 96(sp)
 slli t1, t5, 3
-add t1, t2, t1                                  # Load result[i] for printf
+add t1, t2, t1                                  
 ld a1, 0(t1)
-sd t5, 72(sp)
 
+sd t5, 72(sp)
 lla a0, format_int
-call printf
+call printf                                     # Prints the number
 ld t5, 72(sp)
 
+ld t0, 112(sp)
+addi t0, t0, -1
+beq t5, t0, skip_space                          # If it's the last number, skip the space!
+
+sd t5, 72(sp)
+lla a0, format_space
+call printf                                     # Prints the space
+ld t5, 72(sp)
+
+skip_space:
 addi t5, t5, 1
-
 j print
-
 
 
 wrap_up:
