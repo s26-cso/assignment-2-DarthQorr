@@ -56,7 +56,7 @@ insert:
 
 
 mv t0, a0
-mv t1, a1
+addiw t1, a1, 0
 
 addi sp,sp,-64
 sd ra, 56(sp)
@@ -159,7 +159,7 @@ get:
 
 
 mv t0, a0
-mv t1, a1
+addiw t1, a1, 0
 
 addi sp, sp, -64
 sd ra, 56(sp)
@@ -231,7 +231,7 @@ getAtMost:
 # t5 - Address of Right branch
 
 
-mv t0, a0
+addiw t0, a0, 0
 mv t1, a1
 
 addi sp, sp, -64
