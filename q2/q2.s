@@ -182,9 +182,11 @@ ld t2, 96(sp)
 slli t1, t5, 3
 add t1, t2, t1                                  # Load result[i] for printf
 ld a1, 0(t1)
+sd t5, 72(sp)
 
 lla a0, format_int
 call printf
+ld t5, 72(sp)
 
 addi t5, t5, 1
 
