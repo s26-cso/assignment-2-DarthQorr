@@ -166,6 +166,7 @@ sd ra, 56(sp)
 sd t0, 48(sp)
 sd t1, 40(sp)
 li t2, 0                                                # Default return value is 0 (NULL)
+sd t2, 32(sp)
 
 beq t0,x0, wrap_get                                     # If node is null, end the function and return 0
 
