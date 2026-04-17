@@ -1,7 +1,8 @@
 .section .rodata
-    format_int: .string "%ld"
+    format_int:   .string "%ld"
     format_space: .string " "
-    format_nl:  .string "\n"
+    format_nl:    .string "\n"
+    format_scan:  .string "%ld"
 .text
 .global main
 
@@ -19,70 +20,53 @@ main:
 addi sp, sp, -128
 sd ra, 120(sp)
 
-mv t0, a0                                           # a0 holds argc
-mv t1, a1                                           # a1 holds argv
+li a0, 800000					                    # Allocated large buffer
+call malloc
+sd a0, 104(sp)                                      # Store Start Address of numbers (arr) at 104(sp)
 
-addi t0, t0, -1
-addi t1, t1, 8                                      # Moves pointer to argv[1]
-
+li t0, 0                                            # Initialize N = 0
 sd t0, 112(sp)
-sd t1, 104(sp)
-
-slli a0, t0, 3
-call malloc                                         # Allocate memory for the integer array
-sd a0, 96(sp)
-ld t0, 112(sp)
 
 
-mv t2, a0
-li t5, 0
 
-
-arrayinit:                                      # This loop constructs the array of numbers
-beq t5, t0, back                                # Loop until all N arguments are parsed
-
+arrayinit:
 ld t1, 104(sp)
+ld t5, 112(sp)
 slli t4, t5, 3
-add t3, t1, t4
-ld a0, 0(t3)                                    # Load argv[i+1] into a0 for atoi
+add t3, t1, t4                                      # Calculate Address of arr[N]
 
-sd t0, 112(sp)
-sd t1, 104(sp)
-sd t2, 96(sp)                                   # Storing all registers in memory before atoi   
-sd t5, 72(sp)
+lla a0, format_scan
+mv a1, t3                                           # Store numbers in arr
 
-call atoi
+call scanf
 
-ld t0, 112(sp)
-ld t1, 104(sp)                                  # Reloads all registers
-ld t2, 96(sp)
-ld t5, 72(sp)
+li t4, 1
+bne a0, t4, back                             
 
-slli t4, t5, 3
-add t3, t2, t4                                  # Store converted integer into our array
-sd a0, 0(t3)
-
-addi t5, t5, 1
+ld t5, 112(sp)
+addi t5, t5, 1                                      # N++
+sd t5, 112(sp)
 
 j arrayinit
 
 
 
-back:
-ld t1, 96(sp)
-sd t1, 104(sp)                                  # Moves array of numbers pointer from 96 to 104
 
-ld t0, 112(sp)
+back:
+ld t0, 112(sp)                                      # Load final N into t0
+beq t0, x0, wrap_up
+
+
 slli a0, t0, 3
-call malloc                                     # Initialising Result
+call malloc                                         # Initialising Result
 sd a0, 96(sp)
 
 ld t0, 112(sp)
 slli a0, t0, 3
-call malloc                                     # Initialising Stack
+call malloc                                         # Initialising Stack
 sd a0, 88(sp)
 
-li t4, -1                                       # Initializes stack 'top' to -1 (empty)
+li t4, -1                                           # Initializes stack 'top' to -1 (empty)
 sd t4, 80(sp)
 
 ld t0, 112(sp)
