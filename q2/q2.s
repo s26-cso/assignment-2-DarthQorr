@@ -1,5 +1,5 @@
 .section .rodata
-    format_int: .string "%ld "
+    format_int: .string "%ld"
     format_space: .string " "
     format_nl:  .string "\n"
 .text
